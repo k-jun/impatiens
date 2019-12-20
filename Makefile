@@ -1,10 +1,10 @@
-# .PHONY: impatiens
-impatiens-help:
+build:
+	cargo build
+
+help:
 	./target/debug/main -h
 
-impatiens:
-	./target/debug/main -d
+run:
+	./target/debug/main dispersal
 
-test:
-	echo hello
 	

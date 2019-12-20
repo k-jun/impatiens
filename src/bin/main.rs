@@ -7,6 +7,14 @@ use clap::{App, AppSettings, Arg, SubCommand};
 // 引数が
 
 fn main() {
+    let mut app = build_app();
+    match app.clone().get_matches().subcommand() {
+        ("dispersal", Some(_)) => app.print_help(),
+        ("help", Some(_)) | _ => app.print_help(),
+    };
+}
+
+fn build_app() -> App<'static, 'static> {
     let matches = App::new("Impatiens")
         .version(crate_version!())
         .about(crate_description!())
@@ -32,7 +40,7 @@ fn main() {
                 .arg(
                     Arg::with_name("requests")
                         .help("Number of requests to perform")
-                        .short("n")
+                        .short("r")
                         .long("requests")
                         .value_name("requests")
                         .required(true),
@@ -44,25 +52,7 @@ fn main() {
                         .long("concurrency")
                         .value_name("concurrency")
                         .required(true),
-                )
-                .arg(
-                    Arg::with_name("output")
-                        .help("Output format.")
-                        .short("o")
-                        .long("output")
-                        .possible_values(&["text", "json"])
-                        .value_name("output"),
-                )
-                .arg(
-                    Arg::with_name("verbose")
-                        .help("Output all message")
-                        .short("v")
-                        .long("verbose"),
                 ),
-        )
-        .get_matches();
-
-    if matches.is_present("debug") {
-        println!("Debugging is turned on");
-    }
+        );
+    matches
 }
