@@ -1,17 +1,57 @@
 #[macro_use]
 extern crate clap;
 
-use clap::{App, AppSettings, Arg, SubCommand};
+use clap::{App, AppSettings, Arg, ArgMatches, SubCommand};
+use url::Url;
 
-// subcommandはdispersal
-// 引数が
+type ImpatiensResult<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
-fn main() {
+fn main() -> ImpatiensResult<()> {
     let mut app = build_app();
     match app.clone().get_matches().subcommand() {
-        ("dispersal", Some(_)) => app.print_help(),
-        ("help", Some(_)) | _ => app.print_help(),
-    };
+        ("dispersal", Some(matches)) => dispersal(matches)?,
+        ("help", Some(_)) | _ => app.print_help()?,
+    }
+    Ok(())
+}
+
+fn dispersal(matches: &ArgMatches) -> ImpatiensResult<()> {
+    let concurrency: String = matches
+        .value_of("concurrency")
+        .unwrap_or_default()
+        .parse()?;
+
+    println!("{}", concurrency);
+
+    let requests: String = matches.value_of("requests").unwrap_or_default().parse()?;
+    let url = Url::parse(matches.value_of("url").unwrap_or_default())?;
+    //
+    // let host = match url.host_str() {
+    //     Some(host) => host,
+    //     None => {
+    //         // TODO スキーマがなくてもパースできるようにしたい
+    //         println!("url parse error");
+    //         return Ok(());
+    //     }
+    // };
+    //
+    // let port = url.port().unwrap_or(80);
+    //
+    // let report = goku::attack(concurrency, requests, host, port)?;
+    //
+    // let output_format = matches.value_of("output");
+    // if output_format == Some("json") {
+    //     let j = serde_json::to_string(&report).unwrap_or_default();
+    //     println!("{}", j);
+    // } else {
+    //     if matches.is_present("verbose") {
+    //         report.errors().iter().for_each(|e| println!("{}", e));
+    //     }
+    //
+    //     println!("{}", report);
+    // }
+    //
+    Ok(())
 }
 
 fn build_app() -> App<'static, 'static> {
