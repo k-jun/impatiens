@@ -2,6 +2,7 @@
 extern crate clap;
 
 use clap::{App, AppSettings, Arg, ArgMatches, SubCommand};
+use std::time::{Duration, Instant};
 use url::Url;
 
 type ImpatiensResult<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
@@ -26,31 +27,23 @@ fn dispersal(matches: &ArgMatches) -> ImpatiensResult<()> {
     let requests: String = matches.value_of("requests").unwrap_or_default().parse()?;
     let url = Url::parse(matches.value_of("url").unwrap_or_default())?;
     //
-    // let host = match url.host_str() {
-    //     Some(host) => host,
-    //     None => {
-    //         // TODO スキーマがなくてもパースできるようにしたい
-    //         println!("url parse error");
-    //         return Ok(());
-    //     }
-    // };
+    let host = match url.host_str() {
+        Some(host) => host,
+        None => {
+            // TODO スキーマがなくてもパースできるようにしたい
+            println!("url parse error");
+            return Ok(());
+        }
+    };
     //
-    // let port = url.port().unwrap_or(80);
+    let port = url.port().unwrap_or(80);
+    let report = seed()?;
     //
-    // let report = goku::attack(concurrency, requests, host, port)?;
-    //
-    // let output_format = matches.value_of("output");
-    // if output_format == Some("json") {
-    //     let j = serde_json::to_string(&report).unwrap_or_default();
-    //     println!("{}", j);
-    // } else {
-    //     if matches.is_present("verbose") {
-    //         report.errors().iter().for_each(|e| println!("{}", e));
-    //     }
-    //
-    //     println!("{}", report);
-    // }
-    //
+    println!("report {}", "here impatiens report comes");
+    Ok(())
+}
+
+fn seed() -> ImpatiensResult<()> {
     Ok(())
 }
 
