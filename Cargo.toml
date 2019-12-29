@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 clap = { version = "2.33.0", default-features = false }
 url = "1.7"
+async-std = "1.4.0" 
